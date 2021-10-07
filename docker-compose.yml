@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  user-mongodb:
+    image : mongo:5.0.0
+    container_name: user-mongodb
+    volumes:
+      - mongodb-data:/data/user-db
+    ports:
+      - 27018:27017
+    restart: always
+
+volumes:
+  mongodb-data:
+    name: mongodb-data
