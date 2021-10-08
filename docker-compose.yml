@@ -8,6 +8,14 @@ services:
     ports:
       - 27018:27017
     restart: always
+  company-mongodb:
+    image : mongo:5.0.0
+    container_name: conpany-mongodb
+    volumes:
+      - mongodb-data:/data/conpany-db
+    ports:
+      - 27019:27017
+    restart: always
 
 volumes:
   mongodb-data:
