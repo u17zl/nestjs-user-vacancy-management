@@ -14,7 +14,7 @@ import { UsersModule } from '@@users/users.module';
     UsersModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.development',
+      envFilePath: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env.development',
       load: [configuration],
     }),
     MongooseModule.forRootAsync({
