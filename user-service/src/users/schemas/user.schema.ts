@@ -1,27 +1,29 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory, getModelToken } from '@nestjs/mongoose';
+import { Document, Schema as dbSchema } from 'mongoose';
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, auto: true })
+  @Prop({ type: dbSchema.Types.ObjectId, auto: true })
   _id: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Company' })
+  @Prop({ type: dbSchema.Types.ObjectId, ref: 'Company' })
   companyId: string;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   username: string;
 
-  @Prop({ select: false })
+  @Prop({ select: false, required: true })
   password: string;
 
-  @Prop()
+  @Prop({
+    enum: ['admin', 'user'],
+    required: [true, 'A user must have a role'],
+  })
   role: string;
 }
 

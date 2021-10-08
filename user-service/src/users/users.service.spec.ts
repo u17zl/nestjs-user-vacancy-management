@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
 
 describe('UsersService', () => {
@@ -22,7 +23,7 @@ describe('UsersService', () => {
   `(
     'should call findOne for $name and return $returnVal',
     async ({ name, returnVal }: { name: string; returnVal: User }) => {
-      expect(await service.findOne(name)).toEqual(returnVal);
+      expect(await service.findOneByUsername(name)).toEqual(returnVal);
     },
   );
 });

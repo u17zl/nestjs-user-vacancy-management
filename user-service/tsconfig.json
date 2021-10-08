@@ -20,6 +20,6 @@
     "paths": {
       "@@auth/*": ["src/auth/*"],
       "@@users/*": ["src/users/*"],
-    },
+    }
   }
 }
