@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Model, Mongoose } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import * as mongoose from 'mongoose';
 
 import { Company } from './schemas/company.schema';
 import { CreateCompanyDto } from './dto/create-company.dto';

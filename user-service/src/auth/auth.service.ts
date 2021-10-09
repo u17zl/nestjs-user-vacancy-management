@@ -15,8 +15,6 @@ export class AuthService {
 
   async validateUser(loginUserDto: LoginUserDto): Promise<User | null> {
     const { username, password } = loginUserDto;
-
-    console.log('local')
     const user = await this.usersService.findOneByUsername(username);
     if (compareSync(password, user?.password)) {
       return user;
@@ -30,6 +28,10 @@ export class AuthService {
   }
 
   validateToken(jwt: string) {
-    return this.jwtService.verify(jwt);
+    if (this.jwtService.verify(jwt)) {
+      return this.jwtService.decode(jwt);
+    } else {
+      return false
+    }
   }
 }
