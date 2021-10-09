@@ -22,10 +22,13 @@ export class CompaniesSeed {
     describe: 'create seed companies',
   })
   async create() {
-    console.log(`empty companies collection...`);
-    await this.companiesService.dropCollection();
-    console.log(`seeding companies...`);
-    await this.companiesService.create(data[0]);
-    console.log(`seeding companies finished!`);
+    console.log(`emptying vacancies collection...`);
+    const documents = await this.companiesService.findAll();
+    await this.companiesService.batchDelete(documents.map(obj => obj._id));
+    console.log(`emptying vacancies collection finished!`);
+
+    console.log(`seeding vacancies...`);
+    await this.companiesService.batchCreate(data);
+    console.log(`seeding vacancies finished!`);
   }
 }

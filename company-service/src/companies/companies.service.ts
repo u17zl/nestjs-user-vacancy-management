@@ -22,7 +22,11 @@ export class CompaniesService {
     return this.companyModel.findById(id);
   }
 
-  async dropCollection(): Promise <void> {
-    return this.companyModel.db.dropCollection('companies');
+  async batchCreate(data: CreateCompanyDto[]) {
+    return this.companyModel.create(data);
+  }
+
+  async batchDelete(_ids: string[]) {
+    return this.companyModel.deleteMany({ _id: { $in: _ids } });
   }
 }
