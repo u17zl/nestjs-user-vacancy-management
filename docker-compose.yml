@@ -16,6 +16,14 @@ services:
     ports:
       - 27019:27017
     restart: always
+  vacancy-mongodb:
+    image : mongo:5.0.0
+    container_name: vacancy-mongodb
+    volumes:
+      - mongodb-data:/data/vacancy-db
+    ports:
+      - 27020:27017
+    restart: always
 
 volumes:
   mongodb-data:
