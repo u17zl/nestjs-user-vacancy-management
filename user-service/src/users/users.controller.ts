@@ -15,8 +15,8 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getUsers(@Query() query) {
-    return this.usersService.findAll(query);
+  async getUsers() {
+    return this.usersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
