@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@@auth/guards/jwt-auth.guard';
 import { UsersService } from '@@users/users.service';
+import { User } from './schemas/user.schema';
 
 @Controller('users')
 export class UsersController {
@@ -15,13 +16,14 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async getUsers() {
-    return this.usersService.findAll();
+  async getUsers(@Query() query?) {
+    return this.usersService.findAll(query);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getUserProfile(@Request() req) {
+    console.log(req.user)
     return req.user;
   }
 

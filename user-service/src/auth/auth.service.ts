@@ -3,8 +3,9 @@ import { JwtService } from '@nestjs/jwt';
 import { compareSync } from 'bcrypt';
 
 import { UsersService } from '@@users/users.service';
-import { LoginUserDto } from '@@users/dto/login-user.dto';
 import { User } from '@@users/schemas/user.schema';
+import { CreateUserDto } from '@@users/dto/create-user.dto';
+import { LoginUserDto } from '@@users/dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,14 +25,14 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { sub: user._id, username: user.username, role: user.role };
-    return this.jwtService.sign(payload);
+    return { accessToken: this.jwtService.sign(payload) };
   }
 
   validateToken(jwt: string) {
     if (this.jwtService.verify(jwt)) {
       return this.jwtService.decode(jwt);
     } else {
-      return false
+      return false;
     }
   }
 }

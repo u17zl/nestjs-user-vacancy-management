@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Put,
+  Query,
 } from '@nestjs/common';
 import { VacanciesService } from './vacancies.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -34,8 +35,8 @@ export class VacanciesController {
   @Roles(Role.Admin, Role.User)
   @UseGuards(RolesGuard)
   @Get()
-  async findAll(): Promise<Vacancy[]> {
-    return this.vacanciesService.findAll();
+  async findAll(@Query() query?): Promise<Vacancy[]> {
+    return this.vacanciesService.findAll(query);
   }
 
   @Roles(Role.Admin, Role.User)

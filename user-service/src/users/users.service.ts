@@ -11,6 +11,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new this.userModel(createUserDto);
+    console.log(user)
     return user.save();
   }
 
@@ -22,8 +23,8 @@ export class UsersService {
     return this.userModel.findOne({ username: username }).select("+password").exec();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+  async findAll(query?): Promise<User[]> {
+    return this.userModel.find(query).exec();
   }
 
   async batchCreate(createUserDto: CreateUserDto[]) {
