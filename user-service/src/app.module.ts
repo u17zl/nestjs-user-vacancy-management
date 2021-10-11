@@ -9,7 +9,6 @@ import configuration from './config/configuration';
 import { SeedsModule } from './database/seeds/seeds.module';
 import { AuthModule } from '@@auth/auth.module';
 import { UsersModule } from '@@users/users.module';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
