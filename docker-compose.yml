@@ -5,36 +5,30 @@ services:
     container_name: user-mongodb
     volumes:
       - mongodb-data:/data/user-db
-    expose: [27017]
+    # expose: [27017]
     ports:
       - "${USER_DATABASE_DEV_PORT}:27017"
     restart: always
-    networks:
-      - test
 
   company-mongodb:
     image : mongo:5.0.0
-    container_name: conpany-mongodb
+    container_name: company-mongodb
     volumes:
-      - mongodb-data:/data/conpany-db
-    expose: [27017]
+      - mongodb-data:/data/company-db
+    # expose: [27017]
     ports:
       - "${COMPANY_DATABASE_DEV_PORT}:27017"
     restart: always
-    networks:
-      - test
 
   vacancy-mongodb:
     image : mongo:5.0.0
     container_name: vacancy-mongodb
     volumes:
       - mongodb-data:/data/vacancy-db
-    expose: [27017]
+    # expose: [27017]
     ports:
       - "${VACANCY_DATABASE_DEV_PORT}:27017"
     restart: always
-    networks:
-      - test
 
   user-service:
     build: 
@@ -48,7 +42,6 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - AUTH_MICROSERVICE_HOST=user-service
       - AUTH_MICROSERVICE_PORT=${AUTH_MICROSERVICE_PORT}
-    # expose: ["${AUTH_MICROSERVICE_PORT}"]
     ports:
       - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
       - "${AUTH_MICROSERVICE_PORT}:${AUTH_MICROSERVICE_PORT}"
@@ -58,8 +51,6 @@ services:
     depends_on:
       - user-mongodb
     restart: always
-    networks:
-      - test
 
   company-service:
     build: 
@@ -81,8 +72,6 @@ services:
       - company-mongodb
       - user-service
     restart: always
-    networks:
-      - test
 
   vacancy-service:
     build: 
@@ -104,8 +93,6 @@ services:
       - vacancy-mongodb
       - user-service
     restart: always
-    networks:
-      - test
 
   bff-server:
     build: 
@@ -128,13 +115,8 @@ services:
     ports:
       - "${BFF_SERVER_PORT}:${BFF_SERVER_PORT}"
     restart: always
-    networks:
-      - test
+
 
 volumes:
   mongodb-data:
     name: mongodb-data
-
-networks:
-  test:
-    driver: bridge
