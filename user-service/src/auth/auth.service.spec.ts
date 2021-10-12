@@ -1,44 +1,43 @@
-import { ConfigService } from '@nestjs/config';
-import { UnauthorizedException } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
+import { JwtService } from '@nestjs/jwt';
+import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
+import * as mongoose from 'mongoose';
 
-import { UsersModule } from '@@users/users.module';
 import { UsersService } from '@@users/users.service';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
-import { User } from '@@users/schemas/user.schema';
+import { AuthService } from '@@auth/auth.service';
+import { User, UserSchema } from '@@users/schemas/user.schema';
+import { LoginUserDto } from '@@users/dto/login-user.dto';
+import mockUsers from '@@database/mocks/users.mock';
 
 describe('AuthService', () => {
-  const USERNAME = 'bob';
-
   let authService: AuthService;
   let jwtService: JwtService;
-  let jwtStrategy: JwtStrategy;
   let usersService: UsersService;
+  let userModel;
+  let mockUser: User;
 
   beforeEach(async () => {
+    userModel = mongoose.model(User.name, UserSchema);
+
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        UsersModule,
-        PassportModule,
-        JwtModule.registerAsync({
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => ({
-            secret: configService.get('jwt_secret'),
-            signOptions: { expiresIn: '1h' },
-          }),
-        }),
+      providers: [
+        AuthService,
+        {
+          provide: JwtService,
+          useValue: { sign: jest.fn(), verify: jest.fn() },
+        },
+        UsersService,
+        {
+          provide: getModelToken(User.name),
+          useValue: userModel,
+        },
       ],
-      providers: [AuthService, UsersService, JwtService, LocalStrategy, JwtStrategy],
     }).compile();
 
     authService = moduleRef.get<AuthService>(AuthService);
     jwtService = moduleRef.get<JwtService>(JwtService);
-    jwtStrategy = moduleRef.get<JwtStrategy>(JwtStrategy);
     usersService = moduleRef.get<UsersService>(UsersService);
+    mockUser = mockUsers[0];
   });
 
   it('authService should be defined', () => {
@@ -49,67 +48,49 @@ describe('AuthService', () => {
     expect(jwtService).toBeDefined();
   });
 
-  it('jwtStrategy should be defined', () => {
-    expect(jwtStrategy).toBeDefined();
-  });
-
   it('usersService should be defined', () => {
     expect(usersService).toBeDefined();
   });
 
-  test('should get user validation by credentials', () => {
-      const password = 'bob';
-      void authService.validateUser({username: USERNAME, password});
+  it('userModel should be defined', () => {
+    expect(userModel).toBeDefined();
+  });
 
-      expect(usersService.findOneByUsername).toHaveBeenCalledWith({username: USERNAME, password});
+  it('mock user should be defined', () => {
+    expect(mockUser).toBeDefined();
+  });
+
+  it('should get user validation by username', async () => {
+    let loginUserDto: LoginUserDto;
+    loginUserDto = {
+      username: mockUser.username,
+      password: mockUser.password,
+    };
+    const findUsername = jest.spyOn(usersService, 'findOneByUsername');
+    const findOne = jest.spyOn(userModel, 'findOne');
+    authService.validateUser(loginUserDto);
+
+    expect(findUsername).toBeCalledWith(mockUser.username);
+    expect(findOne).toBeCalledWith({ username: mockUser.username });
   });
 
   it('should get jwt token', async () => {
-    const sub = 'id';
-    void authService.login({ username: USERNAME, sub: sub } as unknown as User);
+    const payload = {
+      sub: mockUser._id,
+      username: mockUser.username,
+      role: mockUser.role,
+    };
+    const sign = jest.spyOn(jwtService, 'sign');
+    authService.login({ username: mockUser._id } as unknown as User);
 
-    expect(jwtService.sign).toHaveBeenCalledWith({ username: USERNAME, sub: sub });
+    expect(sign).toBeCalled();
   });
 
-  describe('validate', () => {
-    test('should validate and returns the user based on JWT payload', async () => {
-        const user = { username: USERNAME };
+  it('should verify jwt token', async () => {
+    const verify = jest.spyOn(jwtService, 'verify');
+    const jwt = 'jwt';
+    authService.validateToken(jwt);
 
-        (usersService.findOneByUsername as jest.Mock).mockResolvedValue(user);
-
-        const result = await jwtStrategy.validate({ sub: 'sub', username: USERNAME });
-
-        expect(usersService.findOneByUsername).toHaveBeenCalledWith(USERNAME);
-        expect(result).toEqual(user);
-    });
-
-    test('throws an unauthorized exception as user cannot be found', () => {
-        (usersService.findOneByUsername as jest.Mock).mockResolvedValue(null);
-
-        void expect(jwtStrategy.validate({ sub: 'sub', username: USERNAME })).rejects.toThrow(UnauthorizedException);
-    });
+    expect(verify).toBeCalledWith(jwt);
   });
-
-  describe('validateUser', () => {
-
-    it('should return a user object when credentials are valid', async () => {
-      const res = await authService.validateUser({
-        username: 'bob',
-        password: 'bob',
-      });
-      expect(res.username).toEqual('bob');
-    });
-  
-    it('should return null when credentials are invalid', async () => {
-      const res = await authService.validateUser({
-        username: 'xxx',
-        password: 'xxx',
-      });
-      expect(res).toBeNull();
-    });
-  });
-
 });
-
-
-

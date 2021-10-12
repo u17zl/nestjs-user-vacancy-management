@@ -1,29 +1,63 @@
+import * as mongoose from 'mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from './schemas/user.schema';
+import { getModelToken } from '@nestjs/mongoose';
+import { User, UserSchema } from './schemas/user.schema';
 import { UsersService } from './users.service';
+
+import { CreateUserDto } from './dto/create-user.dto';
+import mockUsers from '@@database/mocks/users.mock';
 
 describe('UsersService', () => {
   let service: UsersService;
+  let userModel;
+  let mockUser: User;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService],
+    userModel = mongoose.model(User.name, UserSchema);
+    const moduleRef: TestingModule = await Test.createTestingModule({
+      providers: [
+        UsersService,
+        {
+          provide: getModelToken(User.name),
+          useValue: userModel,
+        },
+      ],
     }).compile();
 
-    service = module.get<UsersService>(UsersService);
+    service = moduleRef.get<UsersService>(UsersService);
+    mockUser = mockUsers[0];
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it.each`
-    name      | returnVal
-    ${'john'} | ${{ userId: 1, username: 'john', password: 'changeme' }}
-  `(
-    'should call findOne for $name and return $returnVal',
-    async ({ name, returnVal }: { name: string; returnVal: User }) => {
-      expect(await service.findOneByUsername(name)).toEqual(returnVal);
-    },
-  );
+  it('userModel should be defined', () => {
+    expect(userModel).toBeDefined();
+  });
+
+  it('mockUser should be defined', () => {
+    expect(mockUser).toBeDefined();
+  });
+
+  it('should call the userModel findOne', () => {
+    const findOne = jest.spyOn(userModel, 'findOne');
+    service.findById(mockUser._id);
+    expect(findOne).toBeCalled();
+  });
+
+  it(' should call the userModel find', () => {
+    const find = jest.spyOn(userModel, 'find');
+    service.find();
+    expect(find).toBeCalled();
+  });
+
+  test('then it should call the userModel create', () => {
+    let createUserDto: CreateUserDto;
+    createUserDto = mockUser;
+    const create = jest.spyOn(userModel.prototype, 'save');
+    service.create(createUserDto);
+
+    expect(create).toBeCalledTimes(1);
+  });
 });

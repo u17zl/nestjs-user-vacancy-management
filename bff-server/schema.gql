@@ -17,7 +17,7 @@ type Company {
   _id: String!
   name: String!
   address: String!
-  users: [User]!
+  users: [User!]!
   vacancies: [Vacancy]!
 }
 
@@ -94,5 +94,5 @@ input UpdateVacancyInput {
   title: String!
   description: String!
   expiredAt: DateTime
-  _id: String
+  _id: String!
 }

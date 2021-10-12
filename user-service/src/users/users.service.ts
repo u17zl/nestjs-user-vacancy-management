@@ -22,7 +22,7 @@ export class UsersService {
     return this.userModel.findOne({ username: username }).select("+password").exec();
   }
 
-  async findAll(query?): Promise<User[]> {
+  async find(query?): Promise<User[]> {
     return this.userModel.find(query).exec();
   }
 
