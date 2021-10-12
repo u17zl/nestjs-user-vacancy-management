@@ -14,7 +14,7 @@ export class CompaniesService {
     return createdCompany.save();
   }
 
-  async findAll(): Promise<Company[]> {
+  async find(): Promise<Company[]> {
     return this.companyModel.find();
   }
 

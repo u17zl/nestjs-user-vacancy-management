@@ -20,6 +20,7 @@
     "paths": {
       "@@auth/*": ["src/auth/*"],
       "@@companies/*": ["src/companies/*"],
+      "@@database/*": ["src/database/*"]
     }
   }
 }

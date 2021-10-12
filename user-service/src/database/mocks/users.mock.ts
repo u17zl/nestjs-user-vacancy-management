@@ -1,7 +1,5 @@
 import { User } from '@@users/schemas/user.schema';
 
-var mongoose = require('mongoose');
-
 const data = <User[]>[
   {
     _id: '5e5df7f450571fb3aecdcf21',

@@ -1,17 +1,7 @@
 import { Command, Positional } from 'nestjs-command';
 import { Injectable } from '@nestjs/common';
 import { CompaniesService } from '@@companies/companies.service';
-import { Company } from '@@companies/schemas/company.schema';
-
-var mongoose = require('mongoose');
-
-const data = <Company[]>[
-  {
-    _id: mongoose.Types.ObjectId('5e5df7fc6953acd3dc50fe8f'),
-    name: 'PredictiveHire',
-    address: '15 Newton St',
-  }
-];
+import mockCompanies from '@@database/mocks/companies.mock';
 
 @Injectable()
 export class CompaniesSeed {
@@ -23,12 +13,12 @@ export class CompaniesSeed {
   })
   async create() {
     console.log(`emptying companies collection...`);
-    const documents = await this.companiesService.findAll();
+    const documents = await this.companiesService.find();
     await this.companiesService.batchDelete(documents.map(obj => obj._id));
     console.log(`emptying companies collection finished!`);
 
     console.log(`seeding companies...`);
-    await this.companiesService.batchCreate(data);
+    await this.companiesService.batchCreate(mockCompanies);
     console.log(`seeding companies finished!`);
   }
 }
