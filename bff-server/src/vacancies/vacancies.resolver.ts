@@ -24,7 +24,6 @@ export class VacanciesResolver {
 
   @Query(() => Vacancy, { name: 'vacancy' })
   findOne(@Args('_id', { type: () => String }) id: Types.ObjectId) {
-    console.log(id)
     return this.vacanciesService.findOne(id);
   }
 

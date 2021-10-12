@@ -22,7 +22,6 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req) {
-    console.log(req)
     return this.authService.login(req.user);
   }
 
@@ -35,7 +34,6 @@ export class AuthController {
   async loggedIn(data) {
     try {
       const res = this.authService.validateToken(data.jwt);
-      console.log(res)
       return res;
     } catch(e) {
       return false;
