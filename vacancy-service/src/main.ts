@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  await app.listen(configService.get('PORT'));
-  console.log(`Company service application is running on: ${await app.getUrl()}`);
+  await app.listen(configService.get('port'));
+  console.log(`Vacancy service application is running on: ${await app.getUrl()}`);
 }
 bootstrap();

@@ -10,15 +10,17 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {
-      host: configService.get('AUTH_MICROSERVICE_HOST'),
-      port: configService.get('AUTH_MICROSERVICE_PORT')
-    }
-  })
+      host: configService.get('auth_check_service.host'),
+      port: configService.get('auth_check_service.port'),
+    },
+  });
 
   await app.startAllMicroservices();
 
-  await app.listen(configService.get('PORT'));
+  await app.listen(configService.get('port'));
   console.log(`User service application is running on: ${await app.getUrl()}`);
-  console.log(`Auth check microservice is running on: ${configService.get('AUTH_MICROSERVICE_HOST')}:${configService.get('AUTH_MICROSERVICE_PORT')}`);
+  console.log(
+    `Auth microservice is running on: ${configService.get('auth_check_service.host',)}:${configService.get('auth_check_service.port')}`,
+  );
 }
 bootstrap();

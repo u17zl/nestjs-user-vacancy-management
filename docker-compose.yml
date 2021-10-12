@@ -5,26 +5,136 @@ services:
     container_name: user-mongodb
     volumes:
       - mongodb-data:/data/user-db
+    expose: [27017]
     ports:
-      - 27018:27017
+      - "${USER_DATABASE_DEV_PORT}:27017"
     restart: always
+    networks:
+      - test
+
   company-mongodb:
     image : mongo:5.0.0
     container_name: conpany-mongodb
     volumes:
       - mongodb-data:/data/conpany-db
+    expose: [27017]
     ports:
-      - 27019:27017
+      - "${COMPANY_DATABASE_DEV_PORT}:27017"
     restart: always
+    networks:
+      - test
+
   vacancy-mongodb:
     image : mongo:5.0.0
     container_name: vacancy-mongodb
     volumes:
       - mongodb-data:/data/vacancy-db
+    expose: [27017]
     ports:
-      - 27020:27017
+      - "${VACANCY_DATABASE_DEV_PORT}:27017"
     restart: always
+    networks:
+      - test
+
+  user-service:
+    build: 
+      context: ./user-service
+      target: development
+    command: npm run start:dev
+    environment:
+      - USER_SERVICE_PORT=${USER_SERVICE_PORT}
+      - USER_DATABASE_HOST=user-mongodb
+      - USER_DATABASE_PORT=${USER_DATABASE_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - AUTH_MICROSERVICE_HOST=user-service
+      - AUTH_MICROSERVICE_PORT=${AUTH_MICROSERVICE_PORT}
+    # expose: ["${AUTH_MICROSERVICE_PORT}"]
+    ports:
+      - "${USER_SERVICE_PORT}:${USER_SERVICE_PORT}"
+      - "${AUTH_MICROSERVICE_PORT}:${AUTH_MICROSERVICE_PORT}"
+    volumes:
+      - ./user-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - user-mongodb
+    restart: always
+    networks:
+      - test
+
+  company-service:
+    build: 
+      context: ./company-service
+      target: development
+    command: npm run start:dev
+    environment:
+      - COMPANY_SERVICE_PORT=${COMPANY_SERVICE_PORT}
+      - COMPANY_DATABASE_HOST=company-mongodb
+      - COMPANY_DATABASE_PORT=${COMPANY_DATABASE_PORT}
+      - AUTH_MICROSERVICE_HOST=user-service
+      - AUTH_MICROSERVICE_PORT=${AUTH_MICROSERVICE_PORT}
+    ports:
+      - "${COMPANY_SERVICE_PORT}:${COMPANY_SERVICE_PORT}"
+    volumes:
+      - ./company-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - company-mongodb
+      - user-service
+    restart: always
+    networks:
+      - test
+
+  vacancy-service:
+    build: 
+      context: ./vacancy-service
+      target: development
+    command: npm run start:dev
+    environment:
+      - VACANCY_SERVICE_PORT=${VACANCY_SERVICE_PORT}
+      - VACANCY_DATABASE_HOST=vacancy-mongodb
+      - VACANCY_DATABASE_PORT=${VACANCY_DATABASE_PORT}
+      - AUTH_MICROSERVICE_HOST=user-service
+      - AUTH_MICROSERVICE_PORT=${AUTH_MICROSERVICE_PORT}
+    ports:
+      - "${VACANCY_SERVICE_PORT}:${VACANCY_SERVICE_PORT}"
+    volumes:
+      - ./vacancy-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - vacancy-mongodb
+      - user-service
+    restart: always
+    networks:
+      - test
+
+  bff-server:
+    build: 
+      context: ./bff-server
+      target: development
+    command: npm run start:dev
+    environment:
+      - BFF_SERVER_HOST=${BFF_SERVER_HOST}
+      - BFF_SERVER_PORT=${BFF_SERVER_PORT}
+      - USER_SERVICE_HOST=user-service
+      - USER_SERVICE_PORT=${USER_SERVICE_PORT}
+      - COMPANY_SERVICE_HOST=company-service
+      - COMPANY_SERVICE_PORT=${COMPANY_SERVICE_PORT}
+      - VACANCY_SERVICE_HOST=vacancy-service
+      - VACANCY_SERVICE_PORT=${VACANCY_SERVICE_PORT}
+    depends_on:
+      - user-service
+      - company-service
+      - vacancy-service
+    ports:
+      - "${BFF_SERVER_PORT}:${BFF_SERVER_PORT}"
+    restart: always
+    networks:
+      - test
 
 volumes:
   mongodb-data:
     name: mongodb-data
+
+networks:
+  test:
+    driver: bridge

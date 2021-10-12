@@ -16,7 +16,7 @@ export class VacanciesService {
 
   async create(createVacancyInput: CreateVacancyInput): Promise<any> {
     const vacancy$ = this.httpService.post(
-      `${this.configService.get('vacancy_microservice_base_url')}/vacancies`,
+      `${this.configService.get('vacancy_service_base_url')}/vacancies`,
       createVacancyInput,
     );
     const { data } = await lastValueFrom(vacancy$);
@@ -26,7 +26,7 @@ export class VacanciesService {
   async findAll(): Promise<any> {
     return this.httpService
       .get(
-        `${this.configService.get('vacancy_microservice_base_url')}/vacancies`,
+        `${this.configService.get('vacancy_service_base_url')}/vacancies`,
       )
       .pipe(map((response) => response.data));
   }
@@ -35,7 +35,7 @@ export class VacanciesService {
     return this.httpService
       .get(
         `${this.configService.get(
-          'vacancy_microservice_base_url',
+          'vacancy_service_base_url',
         )}/vacancies/${id}`,
       )
       .pipe(map((response) => response.data));
@@ -48,7 +48,7 @@ export class VacanciesService {
     return this.httpService
       .put(
         `${this.configService.get(
-          'vacancy_microservice_base_url',
+          'vacancy_service_base_url',
         )}/vacancies/${id}`,
         updateVacancyInput,
       )
@@ -59,7 +59,7 @@ export class VacanciesService {
     return this.httpService
       .delete(
         `${this.configService.get(
-          'vacancy_microservice_base_url',
+          'vacancy_service_base_url',
         )}/vacancies/${id}`,
       )
       .pipe(map((response) => response.data));
@@ -69,7 +69,7 @@ export class VacanciesService {
     return this.httpService
       .get(
         `${this.configService.get(
-          'vacancy_microservice_base_url',
+          'vacancy_service_base_url',
         )}/vacancies?companyId=${companyId}`,
       )
       .pipe(map((response) => response.data));

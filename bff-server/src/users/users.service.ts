@@ -16,7 +16,7 @@ export class UsersService {
 
   async createUser(createUserInput: CreateUserInput): Promise<any> {
     const token$ = this.httpService.post(
-      `${this.configService.get('user_microservice_base_url')}/auth/signup`,
+      `${this.configService.get('user_service_base_url')}/auth/signup`,
       createUserInput,
     );
     const { data } = await lastValueFrom(token$);
@@ -26,7 +26,7 @@ export class UsersService {
 
   async login(loginInput: LoginInput): Promise<any> {
     const user$ = this.httpService.post(
-      `${this.configService.get('user_microservice_base_url')}/auth/login`,
+      `${this.configService.get('user_service_base_url')}/auth/login`,
       loginInput,
     );
     const { data } = await lastValueFrom(user$);
@@ -35,14 +35,14 @@ export class UsersService {
 
   async findAll(): Promise<any> {
     return this.httpService
-      .get(`${this.configService.get('user_microservice_base_url')}/users`)
+      .get(`${this.configService.get('user_service_base_url')}/users`)
       .pipe(map((response) => response.data));
   }
 
   async findOne(id: Types.ObjectId): Promise<any> {
     return this.httpService
       .get(
-        `${this.configService.get('user_microservice_base_url')}/users/${id}`,
+        `${this.configService.get('user_service_base_url')}/users/${id}`,
       )
       .pipe(map((response) => response.data));
   }
@@ -51,7 +51,7 @@ export class UsersService {
     return this.httpService
       .get(
         `${this.configService.get(
-          'user_microservice_base_url',
+          'user_service_base_url',
         )}/users?companyId=${companyId}`,
       )
       .pipe(map((response) => response.data));

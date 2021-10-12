@@ -15,7 +15,7 @@ export class CompaniesService {
 
   async create(createCompanyInput: CreateCompanyInput): Promise<any> {
     const company$ = this.httpService.post(
-      `${this.configService.get('company_microservice_base_url')}/companies`,
+      `${this.configService.get('company_service_base_url')}/companies`,
       createCompanyInput,
     );
     const { data } = await lastValueFrom(company$);
@@ -24,11 +24,11 @@ export class CompaniesService {
 
   async findAll(): Promise<any> {
     console.log(
-      `${this.configService.get('company_microservice_base_url')}/companies`,
+      `${this.configService.get('company_service_base_url')}/companies`,
     );
     return this.httpService
       .get(
-        `${this.configService.get('company_microservice_base_url')}/companies`,
+        `${this.configService.get('company_service_base_url')}/companies`,
       )
       .pipe(map((response) => response.data));
   }
@@ -37,7 +37,7 @@ export class CompaniesService {
     return this.httpService
       .get(
         `${this.configService.get(
-          'company_microservice_base_url',
+          'company_service_base_url',
         )}/companies/${id}`,
       )
       .pipe(map((response) => response.data));
