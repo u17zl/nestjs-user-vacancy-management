@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType,  } from '@nestjs/graphql';
 import { Types } from 'mongoose';
 import { Company } from '@@companies/models/company.model';
 
@@ -13,8 +13,8 @@ export class Vacancy {
   @Field((type) => String)
   description: string;
 
-  @Field((type) => Date)
-  expiredAt?: Date;
+  @Field(type => String, {nullable: true})
+  expiredAt: string;
 
   @Field((type) => String)
   companyId: Types.ObjectId;
