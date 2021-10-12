@@ -33,13 +33,13 @@ export class UsersSeed {
     describe: 'create seed users',
   })
   async create() {
-    console.log(`emptying vacancies collection...`);
+    console.log(`emptying users collection...`);
     const documents = await this.usersService.findAll();
     await this.usersService.batchDelete(documents.map(obj => obj._id));
-    console.log(`emptying vacancies collection finished!`);
+    console.log(`emptying users collection finished!`);
 
-    console.log(`seeding vacancies...`);
+    console.log(`seeding users...`);
     await this.usersService.batchCreate(data);
-    console.log(`seeding vacancies finished!`);
+    console.log(`seeding users finished!`);
   }
 }

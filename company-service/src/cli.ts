@@ -8,7 +8,6 @@ async function bootstrap() {
   });
 
   try {
-    console.log('exec')
     await app.select(CommandModule).get(CommandService).exec();
     await app.close();
   } catch (error) {
