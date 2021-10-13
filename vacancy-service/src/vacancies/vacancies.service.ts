@@ -17,7 +17,7 @@ export class VacanciesService {
     return createdVacancy.save();
   }
 
-  async findAll(query?): Promise<Vacancy[]> {
+  async find(query?): Promise<Vacancy[]> {
     return this.vacancyModel.find(query);
   }
 

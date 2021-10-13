@@ -36,7 +36,7 @@ export class VacanciesController {
   @UseGuards(RolesGuard)
   @Get()
   async findAll(@Query() query?): Promise<Vacancy[]> {
-    return this.vacanciesService.findAll(query);
+    return this.vacanciesService.find(query);
   }
 
   @Roles(Role.Admin, Role.User)
@@ -57,7 +57,6 @@ export class VacanciesController {
   }
 
   @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   @UseGuards(RolesGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
