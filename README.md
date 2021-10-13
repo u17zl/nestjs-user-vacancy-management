@@ -3,6 +3,7 @@
 ## Description
 
 A users, companies and vacancies management project deveoped with Nestjs, GraphQL, mongoDB and docker.  
+
 A BFF server connected with 3 services (users, companies, vacancies) achieving the functionalities of user login and signup, retriving users, posting and retriving companies and CRUD of vacancies.
 
 ## Infrastructure
@@ -15,43 +16,40 @@ A BFF server connected with 3 services (users, companies, vacancies) achieving t
 ## Tech Specifications
 
 1. Use Nestjs CLI generate RESTful and GraphQL resources
-2. Use `ConfigService` to setup environment varibales in different stage
-3. Use `AuthGuard` to serve protected the controller or the router
+2. Use `ConfigService` to centralize environment varibales in different stage
+3. Use `AuthGuard` and `RolesGuard` to decorate protected controllers or the routers
 4. Use `Passport` local strategy and jwt strategy for authentication and authorization.
-5. Use schema provider to hook `pre save` on saving hashed password 
+5. Use `schemaProvider` to hook 'pre save' to save hashed password 
 6. Use Interceptor to set `authorization` bearer token to HttpService
-7. Use `nestjs-command` to write seeding scripts
-8. Use `docker` to containerize app and support hot reload development
-9. Use `docker` to manage multi-stage environment varibales  
+7. Use `nestjs-command` to run seeding scripts
+8. Use `docker` to containerize app and support hot reload development 
+10. Use `Jest` to unit test
 
 
 ## Installation
 
 ```bash
 # container build
-$ docker-compose --env-file .env.development build
+$ cp .env.development .env && docker-compose up
 
+# switch to another terminal
 # seed users
-$ docker-compose --env-file .env.development exec user-service npm run seed:users
+$ docker-compose exec user-service npm run seed:users
 
 # seed companies
-$ docker-compose --env-file .env.development exec company-service npm run seed:companies
+$ docker-compose exec company-service npm run seed:companies
 
 # seed vacancies
-$ docker-compose --env-file .env.development exec vacancy-service npm run seed:vacancies
-
-# run all services
-$ docker-compose --env-file .env.development up
-
+$ docker-compose exec vacancy-service npm run seed:vacancies
 ```
 
 ## GraphQL Playground
 
-GraphQL playground is running at [https://locahost:3000/graphql](https://locahost:3000/graphql)
+GraphQL playground is running at [http://locahost:3000/graphql](http://locahost:3000/graphql)
 
-For more GraphQL documentations, please check out here [here](/user-service/README.md)
+For more GraphQL documentations, please check out here [here](/bff-server/README.md)
 
-## Stories 
+## User Stories 
 
 ### Preparation work:
 Please login first: 
@@ -65,7 +63,7 @@ mutation {
 
 Set the `accessToken` to header:  
 ```
-{"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTVkZjdmNDUwNTcxZmIzYWVjZGNmMjEiLCJ1c2VybmFtZSI6ImJvYiIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjM0MDAyODExLCJleHAiOjE2MzQwMDY0MTF9.eXMkx8JjSibc-AEiHGSGZvO11MEDFF4DIx823q6oNRc"}
+{"Authorization": "Bearer accessToken"}
 ```
 
 - [x] 1. A company has a name and address
