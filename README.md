@@ -2,9 +2,9 @@
 
 ## Description
 
-A users, companies and vacancies management project deveoped with Nestjs, GraphQL, mongoDB and docker.  
+A users, companies and vacancies management project developed with Nestjs, GraphQL, mongoDB and docker.  
 
-A BFF server connected with 3 services (users, companies, vacancies) achieving the functionalities of user login and signup, retriving users, posting and retriving companies and CRUD of vacancies.
+A BFF server connected with 3 services (users, companies, vacancies) achieving the functionalities of user login and signup, retrieving users, posting and retrieving companies and CRUD of vacancies.
 
 ## Infrastructure
 
@@ -15,14 +15,14 @@ A BFF server connected with 3 services (users, companies, vacancies) achieving t
 
 ## Tech Specifications
 
-1. Use Nestjs CLI generate RESTful and GraphQL resources
-2. Use `ConfigService` to centralize environment varibales in different stage
+1. Use Nestjs CLI to generate RESTful and GraphQL resources
+2. Use `ConfigService` to centralize environment variables in different stages
 3. Use `AuthGuard` and `RolesGuard` to decorate protected controllers or the routers
-4. Use `Passport` local strategy and jwt strategy for authentication and authorization.
+4. Use `Passport` local strategy and JWT strategy for authentication and authorization.
 5. Use `schemaProvider` to hook 'pre save' to save hashed password 
 6. Use Interceptor to set `authorization` bearer token to HttpService
 7. Use `nestjs-command` to run seeding scripts
-8. Use `docker` to containerize app and support hot reload development 
+8. Use `docker` to containerize the app and support hot reload development 
 10. Use `Jest` to unit test
 
 
