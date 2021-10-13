@@ -81,7 +81,7 @@ input CreateCompanyInput {
 input CreateVacancyInput {
   companyId: String!
   title: String!
-  description: String!
+  description: String
   expiredAt: DateTime
 }
 
@@ -92,7 +92,7 @@ scalar DateTime
 
 input UpdateVacancyInput {
   title: String!
-  description: String!
+  description: String
   expiredAt: DateTime
   _id: String!
 }

@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Model, Mongoose } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -7,8 +11,10 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 
 @Injectable()
 export class CompaniesService {
-  constructor(@InjectModel(Company.name) private companyModel: Model<Company>) {}
-  
+  constructor(
+    @InjectModel(Company.name) private companyModel: Model<Company>,
+  ) {}
+
   async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
     const createdCompany = new this.companyModel(createCompanyDto);
     return createdCompany.save();
@@ -19,7 +25,15 @@ export class CompaniesService {
   }
 
   async findById(id: string): Promise<Company> {
-    return this.companyModel.findById(id);
+    try {
+      const company = await this.companyModel.findById(id);
+      if (!company) {
+        throw new NotFoundException();
+      }
+      return company;
+    } catch {
+      throw new BadRequestException();
+    }
   }
 
   async batchCreate(data: CreateCompanyDto[]) {

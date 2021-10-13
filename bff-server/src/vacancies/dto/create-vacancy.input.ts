@@ -4,12 +4,12 @@ import { Types } from 'mongoose';
 @InputType()
 export class CreateVacancyInput {
   @Field(() => String)
-  companyId: Types.ObjectId;
+  companyId!: Types.ObjectId;
 
   @Field()
-  title: string;
+  title!: string;
 
-  @Field()
+  @Field({nullable: true})
   description: string;
 
   @Field(() => Date, {nullable: true})

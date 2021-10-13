@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -22,7 +22,15 @@ export class VacanciesService {
   }
 
   async findById(id: string): Promise<Vacancy> {
-    return this.vacancyModel.findById(id);
+    try {
+      const vacancy = await this.vacancyModel.findById(id);
+      if (!vacancy) {
+        throw new NotFoundException();
+      }
+      return vacancy;
+    } catch {
+      throw new BadRequestException();
+    }
   }
 
   async update(
@@ -35,7 +43,15 @@ export class VacanciesService {
   }
 
   async remove(id: string): Promise<Vacancy> {
-    return this.vacancyModel.findByIdAndDelete(id);
+    try {
+      const vacancy = await this.vacancyModel.findByIdAndDelete(id);
+      if (!vacancy) {
+        throw new NotFoundException();
+      }
+      return vacancy;
+    } catch {
+      throw new BadRequestException();
+    }
   }
 
   async batchCreate(data: CreateVacancyDto[]) {
