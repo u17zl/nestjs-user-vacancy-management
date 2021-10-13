@@ -10,7 +10,7 @@ A BFF server connected with 3 services (users, companies, vacancies) achieving t
 
 <img src="assets/infrastructure.png?raw=true" width="600" alt="Project Infrastructure">
 
-## Database Model
+## Database Schema
 <img src="assets/database_model.png?raw=true" width="500" alt="Database Model">
 
 ## Tech Specifications
@@ -20,7 +20,7 @@ A BFF server connected with 3 services (users, companies, vacancies) achieving t
 3. Use `AuthGuard` and `RolesGuard` to decorate protected controllers or the routers
 4. Use `Passport` local strategy and JWT strategy for authentication and authorization.
 5. Use `schemaProvider` to hook 'pre save' to save hashed password 
-6. Use Interceptor to set `authorization` bearer token to HttpService
+6. Use `Interceptor` to set `authorization` bearer token to HttpService
 7. Use `nestjs-command` to run seeding scripts
 8. Use `docker` to containerize the app and support hot reload development 
 9. Use `Jest` to unit test
