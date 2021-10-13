@@ -23,8 +23,8 @@ A BFF server connected with 3 services (users, companies, vacancies) achieving t
 6. Use Interceptor to set `authorization` bearer token to HttpService
 7. Use `nestjs-command` to run seeding scripts
 8. Use `docker` to containerize the app and support hot reload development 
-10. Use `Jest` to unit test
-
+9. Use `Jest` to unit test
+10. Use [`gitmoji`](https://gitmoji.dev/) to bring fun and meaningful commit.
 
 ## Installation
 
